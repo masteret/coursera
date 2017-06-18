@@ -3,12 +3,11 @@ import edu.princeton.cs.algs4.StdStats;
 
 public class PercolationStats {
     private double[] count_list;
-    private int size;
     private int trial_c;
 
     public PercolationStats(int n, int trials) {
         // perform trials independent experiments on an n-by-n grid
-        this.size = n;
+        if (n <= 0 || trials <= 0) throw new IllegalArgumentException();
         this.count_list = new double[trials];
         this.trial_c = trials;
         for (int i = 0; i < trials; i++) {
@@ -49,7 +48,6 @@ public class PercolationStats {
         // test client (described below)
         int n = Integer.parseInt(args[0]);
         int trials = Integer.parseInt(args[1]);
-        if (n <= 0 || trials <= 0) throw new IllegalArgumentException();
         PercolationStats test = new PercolationStats(n, trials);
         System.out.println("mean = " + test.mean());
         System.out.println("stddev = " + test.stddev());
