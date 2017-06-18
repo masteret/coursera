@@ -3,7 +3,7 @@ import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 public class Percolation {
     private WeightedQuickUnionUF grid;
     private int[] status;
-    private int[] back_water;
+    private WeightedQuickUnionUF back_water;
     private int len;
     private int count;
 
@@ -12,10 +12,7 @@ public class Percolation {
         if (n <= 0) throw new IllegalArgumentException();
         this.grid = new WeightedQuickUnionUF(n*n+2);
         this.status = new int[n*n+2];
-        this.back_water = new int[n];
-        if (n == 1) {
-            back_water[0] = 1;
-        }
+        this.back_water = new WeightedQuickUnionUF(n*n+1);
         this.len = n;
         this.count = 0;
         this.status[0] = 1;
@@ -31,6 +28,7 @@ public class Percolation {
         int p = row*len+col+1;
         int q = row2*len+col2+1;
         grid.union(p, q);
+        back_water.union(p, q);
     }
 
     private void print_grid() {
@@ -55,19 +53,14 @@ public class Percolation {
             // union up
             if (row-1 > 0 && isOpen(row-1, col)) {
                 union(row, col, row-1, col);
-                if (row == len) {
-                    back_water[col-1] = 1;
-                }
             } else if (row-1 == 0) {
                 // first row
                 grid.union((row-1)*len+col, 0);
+                back_water.union((row-1)*len+col, 0);
             }
             // union down
             if (row+1 <= len && isOpen(row+1, col)) {
                 union(row, col, row+1, col);
-                if (row+1 == len) {
-                    back_water[col-1] = 1;
-                }
             } else if (row+1 > len) {
                 // first row
                 grid.union((row-1)*len+col, len*len+1);
@@ -75,16 +68,10 @@ public class Percolation {
             // union left
             if (col-1 > 0 && isOpen(row, col-1)) {
                 union(row, col, row, col-1);
-                if (back_water[col-2] == 1) {
-                    back_water[col-1] = 1;
-                }
             }
             // union right
             if (col+1 <= len && isOpen(row, col+1)) {
                 union(row, col, row, col+1);
-                if (back_water[col] == 1) {
-                    back_water[col-1] = 1;
-                }
             }
         }
     }
@@ -101,7 +88,7 @@ public class Percolation {
         // is site (row, col) full?
         int p = (row-1)*len+col;
         if (row == len) {
-            return grid.connected(p, 0) && (back_water[col-1] == 1);
+            return grid.connected(p, 0) && back_water.connected(p, 0);
         } else {
             return grid.connected(p, 0);
         }
@@ -129,6 +116,6 @@ public class Percolation {
         test.print_grid();
         test.open(3,1);
         test.print_grid();
-        System.out.println(test.isFull(3,3));
+        System.out.println(test.isFull(3,1));
     }
 }
