@@ -82,8 +82,8 @@ public class Percolation {
             // union right
             if (col+1 <= len && isOpen(row, col+1)) {
                 union(row, col, row, col+1);
-                if (back_water[col+2] == 1) {
-                    back_water[col+1] = 1;
+                if (back_water[col] == 1) {
+                    back_water[col-1] = 1;
                 }
             }
         }
@@ -119,18 +119,16 @@ public class Percolation {
 
     public static void main(String[] args) {  
     // test client (optional)
-        Percolation test = new Percolation(1);
+        Percolation test = new Percolation(3);
 
-        test.open(1,1);
+        test.open(1,3);
         test.print_grid();
-        // test.open(2,2);
-        // test.print_grid();
-        // test.open(3,2);
-        // test.print_grid();
-        // test.open(4,2);
-        // test.print_grid();
-        // test.open(5,2);
-        // test.print_grid();
-        System.out.println(test.percolates());
+        test.open(2,3);
+        test.print_grid();
+        test.open(3,3);
+        test.print_grid();
+        test.open(3,1);
+        test.print_grid();
+        System.out.println(test.isFull(3,3));
     }
 }
